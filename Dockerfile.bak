@@ -1,0 +1,11 @@
+FROM cpp-build-base:0.1.0 AS build
+ADD ./Binary /
+WORKDIR /Binary
+RUN make 
+
+FROM ubuntu:bionic
+RUN apt update && apt install apache2
+WORKDIR /opt/docky
+COPY --from=build /Binary/docky ./
+COPY ./Website/index.html /var/www/html/index.html
+CMD ["./docky"]
